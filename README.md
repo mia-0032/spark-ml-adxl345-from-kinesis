@@ -5,7 +5,7 @@ Spark ML using ADXL345 acceleration sensor values from Kinesis
 
 ```shell
 $ brew install scala
-$ brew install apache-spark141
+$ brew install apache-spark
 ```
 
 ## Build

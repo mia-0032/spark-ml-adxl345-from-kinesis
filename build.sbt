@@ -2,14 +2,14 @@ name := "spark-ml-adxl345-from-kinesis"
 
 version := "1.0"
 
-scalaVersion := "2.10.6"
+scalaVersion := "2.10.5"
 
 libraryDependencies ++= Seq(
-  "org.apache.spark" %% "spark-core"                  % "1.4.1" % "provided",
-  "org.apache.spark" %% "spark-sql"                   % "1.4.1" % "provided",
-  "org.apache.spark" %% "spark-mllib"                 % "1.4.1" % "provided",
-  "org.apache.spark" %% "spark-streaming"             % "1.4.1" % "provided",
-  "org.apache.spark" %% "spark-streaming-kinesis-asl" % "1.4.1",
+  "org.apache.spark" %% "spark-core"                  % "1.6.0" % "provided",
+  "org.apache.spark" %% "spark-sql"                   % "1.6.0" % "provided",
+  "org.apache.spark" %% "spark-mllib"                 % "1.6.0" % "provided",
+  "org.apache.spark" %% "spark-streaming"             % "1.6.0" % "provided",
+  "org.apache.spark" %% "spark-streaming-kinesis-asl" % "1.6.0",
   "org.json4s"       %% "json4s-native"               % "3.3.0"
 )
 
