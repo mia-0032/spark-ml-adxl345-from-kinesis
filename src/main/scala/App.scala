@@ -4,7 +4,7 @@ import org.apache.spark.mllib.linalg.{Vector,Vectors}
 import org.apache.spark.mllib.regression.LabeledPoint
 import org.apache.spark.rdd.RDD
 import org.apache.spark.storage.StorageLevel
-import org.apache.spark.streaming.{Seconds, Duration, StreamingContext}
+import org.apache.spark.streaming.{Seconds, StreamingContext}
 import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.kinesis._
 import org.apache.spark.{SparkConf,SparkContext}
@@ -20,7 +20,7 @@ object App {
     val conf = new SparkConf().setAppName("SensorValueDecisionTree")
     val ssc = new StreamingContext(conf, Seconds(2))
     val sc = ssc.sparkContext
-    Logger.getRootLogger.setLevel(Level.WARN)
+    Logger.getRootLogger.setLevel(Level.ERROR)
 
     val standingDataPath = args(0)
     val sittingDataPath = args(1)
@@ -40,8 +40,8 @@ object App {
     dStream.foreachRDD { rdd =>
       model.predict(rdd).foreach { p =>
         val s = p match {
-          case 1.0 => "standing"
-          case 0.0 => "sitting"
+          case 1.0 => "Standing"
+          case 0.0 => "Sitting"
         }
         println(s)
       }
@@ -68,7 +68,7 @@ object App {
   def createDecisionTreeModel(trainingData: RDD[LabeledPoint]): DecisionTreeModel = {
     val categoricalFeaturesInfo = Map[Int, Int]()
     val impurity = "variance"
-    val maxDepth = 5
+    val maxDepth = 2
     val maxBins = 32
 
     val model = DecisionTree.trainRegressor(
@@ -95,13 +95,12 @@ object App {
       streamName,
       "kinesis.ap-northeast-1.amazonaws.com",
       "ap-northeast-1",
-      InitialPositionInStream.TRIM_HORIZON,
+      InitialPositionInStream.LATEST,
       Seconds(2),
       StorageLevel.MEMORY_AND_DISK_2
     ).map(s => new String(s))
     .map { l =>
       implicit val formats = DefaultFormats
-      println(l)
       parse(l).extract[Acceleration]
     }.map{ a =>
       Vectors.dense(a.X, a.Y, a.Z)
